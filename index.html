@@ -229,6 +229,23 @@
                 riskLevelText.className = 'text-5xl font-extrabold ' + levelClass;
             }
 
+            function parseGeminiResponse(responseText) {
+                const recommendations = [];
+                const sections = responseText.split('###').map(s => s.trim()).filter(s => s);
+                sections.forEach(section => {
+                    const lines = section.split('\n').map(l => l.trim()).filter(l => l);
+                    if (lines.length >= 2) {
+                        const title = lines[0];
+                        const description = lines.find(l => l.startsWith('Action:'))?.replace('Action:', '').trim();
+                        const priority = lines.find(l => l.startsWith('Priority:'))?.replace('Priority:', '').trim();
+                        if (title && description && priority) {
+                            recommendations.push({ title, description, priority });
+                        }
+                    }
+                });
+                return recommendations;
+            }
+
             async function getGeminiPlan() {
                 generatePlanBtn.disabled = true;
                 generatePlanBtn.textContent = 'Generating...';
@@ -253,32 +270,15 @@
                     As an expert climate business advisor for the MENA region, create a concise, actionable plan for a small business owner who has identified the following specific climate vulnerabilities:
                     - ${selectedRisks.join('\n- ')}
 
-                    For each vulnerability, provide one clear, low-cost, and practical recommendation. Return the response as a valid JSON object containing a single key "recommendations". This key should hold an array of objects, where each object has three string properties: "title" (a short, catchy title for the recommendation), "description" (a 1-2 sentence explanation of the action), and "priority" (a value of "High", "Medium", or "Low").
+                    For each vulnerability, provide one clear, low-cost, and practical recommendation. 
+                    Format the entire response as a list using Markdown. For each item, use the following strict format:
+                    ### [Catchy Title for the Recommendation]
+                    Action: [1-2 sentence description of the action]
+                    Priority: [High, Medium, or Low]
                 `;
 
                 const payload = {
-                    contents: [{ role: "user", parts: [{ text: prompt }] }],
-                    generationConfig: {
-                        responseMimeType: "application/json",
-                        responseSchema: {
-                            type: "OBJECT",
-                            properties: {
-                                "recommendations": {
-                                    type: "ARRAY",
-                                    items: {
-                                        type: "OBJECT",
-                                        properties: {
-                                            "title": { "type": "STRING" },
-                                            "description": { "type": "STRING" },
-                                            "priority": { "type": "STRING" }
-                                        },
-                                        required: ["title", "description", "priority"]
-                                    }
-                                }
-                            },
-                            required: ["recommendations"]
-                        }
-                    }
+                    contents: [{ role: "user", parts: [{ text: prompt }] }]
                 };
 
                 const apiKey = "";
@@ -292,16 +292,20 @@
                     });
 
                     const result = await response.json();
-
+                    
                     if (!response.ok) {
                         const errorDetails = result.error ? result.error.message : 'An unknown API error occurred.';
                         throw new Error(errorDetails);
                     }
                     
                     if (result.candidates && result.candidates.length > 0 && result.candidates[0].content && result.candidates[0].content.parts.length > 0) {
-                        const jsonText = result.candidates[0].content.parts[0].text;
-                        const parsedJson = JSON.parse(jsonText);
-                        displayRecommendations(parsedJson.recommendations);
+                        const text = result.candidates[0].content.parts[0].text;
+                        const parsedRecommendations = parseGeminiResponse(text);
+                        if (parsedRecommendations.length > 0) {
+                           displayRecommendations(parsedRecommendations);
+                        } else {
+                           throw new Error("Could not parse the model's response. The format might be incorrect.");
+                        }
                     } else {
                         throw new Error("The API returned an empty or invalid response. Please try again.");
                     }
