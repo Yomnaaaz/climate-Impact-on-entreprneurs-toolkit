@@ -276,13 +276,22 @@
                     Action: [1-2 sentence description of the action]
                     Priority: [High, Medium, or Low]
                 `;
+                
+                const apiKey = "AIzaSyBLcw2k6UjIWqj_jBeANi1_y9UtBUYEpMk";
+                
+                if (apiKey === "PASTE_YOUR_API_KEY_HERE" || apiKey === "") {
+                    geminiError.textContent = 'API Key is missing. Please follow the instructions to add your Gemini API key to the HTML file.';
+                    geminiError.classList.remove('hidden');
+                    loader.classList.add('hidden');
+                    generatePlanBtn.disabled = false;
+                    generatePlanBtn.textContent = '✨ Generate My Custom Action Plan';
+                    return;
+                }
 
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
                 const payload = {
                     contents: [{ role: "user", parts: [{ text: prompt }] }]
                 };
-
-                const apiKey = "";
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                 try {
                     const response = await fetch(apiUrl, {
