@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toolkit: Climate Change Impact on Businesses</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F8F9FA;
+        }
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 78, 137, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 78, 137, 0.12);
+        }
+        .btn-primary {
+            background-color: #004E89;
+            color: white;
+            transition: background-color 0.3s ease, opacity 0.3s ease;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+        }
+        .btn-primary:hover {
+            background-color: #003B6A;
+        }
+        .btn-primary:disabled {
+            background-color: #a0aec0;
+            cursor: not-allowed;
+        }
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            background-color: #F5F9FC;
+            border: 1px solid #E0E8F0;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .checklist-item:hover {
+            background-color: #EBF3FA;
+        }
+        .checklist-item input[type="checkbox"] {
+            appearance: none;
+            width: 1.5rem;
+            height: 1.5rem;
+            border: 2px solid #84A0B4;
+            border-radius: 4px;
+            margin-right: 1rem;
+            cursor: pointer;
+            position: relative;
+            transition: background-color 0.3s, border-color 0.3s;
+            flex-shrink: 0;
+        }
+        .checklist-item input[type="checkbox"]:checked {
+            background-color: #004E89;
+            border-color: #004E89;
+        }
+        .checklist-item input[type="checkbox"]:checked::after {
+            content: '✔';
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .section-title {
+            color: #004E89;
+            font-weight: 800;
+        }
+        .chart-container {
+            position: relative; 
+            width: 100%; 
+            max-width: 300px; 
+            margin-left: auto; 
+            margin-right: auto; 
+            height: 300px;
+            max-height: 300px;
+        }
+        .result-text { color: #004E89; }
+        .result-low { color: #28a745; }
+        .result-moderate { color: #fd7e14; }
+        .result-high { color: #dc3545; }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #004E89;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-800">
+
+    <header class="bg-[#004E89] text-white text-center py-12 px-4">
+        <h1 class="text-4xl md:text-5xl font-extrabold mb-3">Toolkit: Climate Change Impact on Businesses</h1>
+        <p class="text-lg md:text-xl max-w-3xl mx-auto text-gray-200">A Guide for MENA Entrepreneurs to understand climate risks, avoid losses, and stay competitive.</p>
+    </header>
+
+    <main class="container mx-auto px-4 py-12">
+        
+        <section id="regional-impact" class="mb-20">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-10 section-title">How Does Climate Affect Businesses in Our Region?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="card p-6"><h3 class="text-2xl font-bold mb-3 text-[#004E89]">🇦🇪 UAE: Hospitality Sector</h3><p class="text-gray-600">A small café struggles with soaring cooling costs during extended heatwaves, reducing daily revenue as fewer customers venture out.</p></div>
+                <div class="card p-6"><h3 class="text-2xl font-bold mb-3 text-[#004E89]">🇯🇴 Jordan: Retail Sector</h3><p class="text-gray-600">A clothing shop in a flood-prone zone faces repeated merchandise damage and costly closures due to intense rainfall.</p></div>
+                <div class="card p-6"><h3 class="text-2xl font-bold mb-3 text-[#004E89]">🇶🇦 Qatar: Fashion Sector</h3><p class="text-gray-600">A boutique brand faces delays and cost increases for imported fabrics due to global supply chain disruptions and local humidity.</p></div>
+                <div class="card p-6"><h3 class="text-2xl font-bold mb-3 text-[#004E89]">🇪🇬 Egypt: Agriculture Sector</h3><p class="text-gray-600">A juice producer faces reduced fruit quality and inconsistent supply due to prolonged drought and rising irrigation costs.</p></div>
+                <div class="card p-6"><h3 class="text-2xl font-bold mb-3 text-[#004E89]">🇸🇦 Saudi Arabia: Logistics Sector</h3><p class="text-gray-600">A delivery startup faces increased vehicle maintenance costs and delays due to overheating and sandstorms.</p></div>
+                <div class="card p-6 flex items-center justify-center bg-[#84A0B4]"><p class="text-2xl font-bold text-white text-center">Your business could be next... Are you prepared?</p></div>
+            </div>
+        </section>
+
+        <section id="vulnerability-check" class="mb-20">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-4 section-title">So, How Vulnerable is Your Business?</h2>
+            <p class="text-center text-lg text-gray-600 mb-10 max-w-4xl mx-auto">Answer the questions below to find out your business's exposure to climate risks. This is an introductory exercise; a more advanced tool will be introduced in Chapter 2.</p>
+            <div class="bg-white rounded-xl shadow-lg p-6 md:p-10">
+                <form id="vulnerability-form" class="grid grid-cols-1 lg:grid-cols-2 gap-x-10 gap-y-8">
+                    <div><h3 class="font-bold text-xl mb-4 text-[#407899]">Operations & Infrastructure</h3><label class="checklist-item"><input type="checkbox" name="vulnerability" data-risk="Is your business in a hot, flood-prone, or coastal area?"><span>Is your business in a hot, flood-prone, or coastal area?</span></label><label class="checklist-item"><input type="checkbox" name="vulnerability" data-risk="My products or machines get damaged during heat or rain."><span>Have you had product or machine damage during heat or rain?</span></label><label class="checklist-item"><input type="checkbox" name="vulnerability" data-risk="My cooling or fridge system struggles in summer."><span>Does your cooling or fridge system struggle in summer?</span></label></div>
+                    <div><h3 class="font-bold text-xl mb-4 text-[#407899]">Supply Chain & Stock</h3><label class="checklist-item"><input type="checkbox" name="vulnerability" data-risk="I rely on long-distance or imported supplies."><span>Do you rely on long-distance or imported supplies?</span></label><label class="checklist-item"><input type="checkbox" name="vulnerability" data-risk="My deliveries have been delayed due to bad weather."><span>Have deliveries been delayed due to bad weather?</span></label><label class="checklist-item"><input type="checkbox" name="vulnerability" data-risk="I only use one supplier for critical items."><span>Do you only use one supplier for critical items?</span></label></div>
+                    <div><h3 class="font-bold text-xl mb-4 text-[#407899]">Sales & Customer Base</h3><label class="checklist-item"><input type="checkbox" name="vulnerability" data-risk="I rely on foot traffic or tourism."><span>Do you rely on foot traffic or tourism?</span></label><label class="checklist-item"><input type="checkbox" name="vulnerability" data-risk="My customers are asking for greener products."><span>Are customers asking for greener products?</span></label><label class="checklist-item"><input type="checkbox" name="vulnerability" data-risk="My sales drop in extreme weather."><span>Do sales drop in extreme weather?</span></label></div>
+                    <div><h3 class="font-bold text-xl mb-4 text-[#407899]">Worker Health & Productivity</h3><label class="checklist-item"><input type="checkbox" name="vulnerability" data-risk="My staff work in hot or unventilated areas."><span>Do staff work in hot or unventilated areas?</span></label><label class="checklist-item"><input type="checkbox" name="vulnerability" data-risk="My staff get sick or tired during heatwaves."><span>Do people get sick or tired during heatwaves?</span></label><label class="checklist-item"><input type="checkbox" name="vulnerability" data-risk="I do not discuss climate risks with my staff."><span>Do you discuss climate risks with staff?</span></label></div>
+                    <div class="lg:col-span-2"><h3 class="font-bold text-xl mb-4 text-[#407899]">Costs & Business Planning</h3><div class="grid grid-cols-1 lg:grid-cols-2 gap-x-10 gap-y-4"><label class="checklist-item"><input type="checkbox" name="vulnerability" data-risk="My energy or water bills are going up."><span>Are energy or water bills going up?</span></label><label class="checklist-item"><input type="checkbox" name="vulnerability" data-risk="I do not know about local climate rules or support."><span>Do you know about local climate rules or support?</span></label><label class="checklist-item"><input type="checkbox" name="vulnerability" data-risk="I lack funds for upgrades."><span>Do you lack funds for upgrades?</span></label></div></div>
+                </form>
+            </div>
+        </section>
+
+        <section id="results" class="text-center mb-20">
+            <h2 class="text-3xl md:text-4xl font-bold mb-8 section-title">Your Results & Action Plan</h2>
+            <div class="card p-8 max-w-4xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="chart-container"><canvas id="riskChart"></canvas></div>
+                    <div>
+                        <p class="text-xl text-gray-600 mb-2">Your business's risk level is:</p>
+                        <h3 id="riskLevelText" class="text-5xl font-extrabold result-text">Not yet assessed</h3>
+                        <p id="riskDescription" class="mt-4 text-lg text-gray-700">Answer the questions above to see your risk level and suggested action plan.</p>
+                        <button id="generatePlanBtn" class="btn-primary mt-6 hidden">✨ Generate My Custom Action Plan</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="gemini-plan" class="hidden">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-10 section-title">Your Personalized Action Plan</h2>
+            <div id="loader" class="loader hidden"></div>
+            <div id="gemini-error" class="text-center text-red-500 hidden"></div>
+            <div id="gemini-recommendations" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-6 mt-12 bg-gray-200">
+        <p class="text-gray-600">This toolkit is part of the Climate Change Impact on Businesses course by Micromentor.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const checkboxes = document.querySelectorAll('input[name="vulnerability"]');
+            const totalQuestions = checkboxes.length;
+            const riskChartCanvas = document.getElementById('riskChart');
+            const riskLevelText = document.getElementById('riskLevelText');
+            const riskDescription = document.getElementById('riskDescription');
+            const generatePlanBtn = document.getElementById('generatePlanBtn');
+            const geminiPlanSection = document.getElementById('gemini-plan');
+            const loader = document.getElementById('loader');
+            const geminiError = document.getElementById('gemini-error');
+            const recommendationsContainer = document.getElementById('gemini-recommendations');
+            let riskChart;
+
+            function createChart(score) {
+                const data = { labels: ['Score', 'Remaining'], datasets: [{ label: 'Risk Level', data: [score, totalQuestions - score], backgroundColor: ['#004E89', '#E0E8F0'], borderColor: ['#FFFFFF', '#FFFFFF'], borderWidth: 4, hoverOffset: 4 }] };
+                const options = { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { display: false }, tooltip: { enabled: false, callbacks: { title: function(tooltipItems) { const item = tooltipItems[0]; let label = item.chart.data.labels[item.dataIndex]; if (Array.isArray(label)) { return label.join(' '); } return label; } } } } };
+                if(riskChart) { riskChart.destroy(); }
+                riskChart = new Chart(riskChartCanvas, { type: 'doughnut', data: data, options: options });
+            }
+
+            function updateResults() {
+                const checkedCount = document.querySelectorAll('input[name="vulnerability"]:checked').length;
+                createChart(checkedCount);
+
+                let level = '';
+                let description = '';
+                let levelClass = 'result-text';
+
+                if (checkedCount > 0) {
+                    generatePlanBtn.classList.remove('hidden');
+                } else {
+                    generatePlanBtn.classList.add('hidden');
+                }
+
+                if (checkedCount >= 9) {
+                    level = 'High Risk';
+                    description = 'Start a simple action plan: one change per week. Ask a mentor for support.';
+                    levelClass = 'result-high';
+                } else if (checkedCount >= 5) {
+                    level = 'Moderate Risk';
+                    description = 'Prioritize 2–3 changes this month, especially cooling and stock safety.';
+                    levelClass = 'result-moderate';
+                } else {
+                    level = 'Low Risk';
+                    description = 'Still, apply 1–2 low-cost actions now to stay ahead.';
+                    levelClass = 'result-low';
+                }
+                
+                riskLevelText.textContent = level;
+                riskDescription.textContent = description;
+                riskLevelText.className = 'text-5xl font-extrabold ' + levelClass;
+            }
+
+            async function getGeminiPlan() {
+                generatePlanBtn.disabled = true;
+                geminiPlanSection.classList.remove('hidden');
+                loader.classList.remove('hidden');
+                geminiError.classList.add('hidden');
+                recommendationsContainer.innerHTML = '';
+
+                const selectedRisks = Array.from(document.querySelectorAll('input[name="vulnerability"]:checked'))
+                    .map(cb => cb.dataset.risk);
+
+                if (selectedRisks.length === 0) {
+                    geminiError.textContent = 'Please select at least one vulnerability to generate a plan.';
+                    geminiError.classList.remove('hidden');
+                    loader.classList.add('hidden');
+                    generatePlanBtn.disabled = false;
+                    return;
+                }
+                
+                const prompt = `
+                    As an expert climate business advisor for the MENA region, create a concise, actionable plan for a small business owner who has identified the following specific climate vulnerabilities:
+                    - ${selectedRisks.join('\n- ')}
+
+                    For each vulnerability, provide one clear, low-cost, and practical recommendation. Return the response as a JSON object containing a single key "recommendations". This key should hold an array of objects, where each object has three properties: "title" (a short, catchy title for the recommendation), "description" (a 1-2 sentence explanation of the action), and "priority" (either "High", "Medium", or "Low").
+                `;
+
+                const payload = {
+                    contents: [{ role: "user", parts: [{ text: prompt }] }],
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "OBJECT",
+                            properties: {
+                                "recommendations": {
+                                    type: "ARRAY",
+                                    items: {
+                                        type: "OBJECT",
+                                        properties: {
+                                            "title": { "type": "STRING" },
+                                            "description": { "type": "STRING" },
+                                            "priority": { "type": "STRING", "enum": ["High", "Medium", "Low"] }
+                                        },
+                                        required: ["title", "description", "priority"]
+                                    }
+                                }
+                            },
+                            required: ["recommendations"]
+                        }
+                    }
+                };
+
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`API Error: ${response.statusText}`);
+                    }
+
+                    const result = await response.json();
+                    
+                    if (result.candidates && result.candidates.length > 0 && result.candidates[0].content && result.candidates[0].content.parts.length > 0) {
+                        const jsonText = result.candidates[0].content.parts[0].text;
+                        const parsedJson = JSON.parse(jsonText);
+                        displayRecommendations(parsedJson.recommendations);
+                    } else {
+                        throw new Error("Invalid response structure from API.");
+                    }
+
+                } catch (error) {
+                    console.error('Error fetching Gemini plan:', error);
+                    geminiError.textContent = 'Sorry, we couldn\'t generate a plan at this time. Please try again later.';
+                    geminiError.classList.remove('hidden');
+                } finally {
+                    loader.classList.add('hidden');
+                    generatePlanBtn.disabled = false;
+                }
+            }
+
+            function displayRecommendations(recommendations) {
+                recommendationsContainer.innerHTML = '';
+                const priorityStyles = {
+                    'High': 'border-red-500',
+                    'Medium': 'border-orange-500',
+                    'Low': 'border-green-500'
+                };
+                recommendations.forEach(rec => {
+                    const priorityClass = priorityStyles[rec.priority] || 'border-gray-300';
+                    const card = `
+                        <div class="card p-6 border-l-4 ${priorityClass}">
+                            <h4 class="text-xl font-bold mb-2 text-[#004E89]">${rec.title}</h4>
+                            <p class="text-gray-600">${rec.description}</p>
+                            <p class="text-sm font-semibold mt-4 text-gray-500">Priority: <span class="${priorityClass.replace('border-', 'text-')}">${rec.priority}</span></p>
+                        </div>
+                    `;
+                    recommendationsContainer.innerHTML += card;
+                });
+            }
+
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateResults);
+                const label = checkbox.nextElementSibling;
+                if(label) { label.addEventListener('click', () => checkbox.click()); }
+            });
+
+            generatePlanBtn.addEventListener('click', getGeminiPlan);
+
+            createChart(0);
+            updateResults();
+        });
+    </script>
+    
+</body>
+</html>
