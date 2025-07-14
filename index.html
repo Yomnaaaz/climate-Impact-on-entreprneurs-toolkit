@@ -164,7 +164,7 @@
         <section id="gemini-plan" class="hidden">
             <h2 class="text-3xl md:text-4xl font-bold text-center mb-10 section-title">Your Personalized Action Plan</h2>
             <div id="loader" class="loader hidden"></div>
-            <div id="gemini-error" class="text-center text-red-500 hidden"></div>
+            <div id="gemini-error" class="text-center text-red-500 hidden p-4 bg-red-100 rounded-lg"></div>
             <div id="gemini-recommendations" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
         </section>
 
@@ -207,6 +207,7 @@
                     generatePlanBtn.classList.remove('hidden');
                 } else {
                     generatePlanBtn.classList.add('hidden');
+                    geminiPlanSection.classList.add('hidden');
                 }
 
                 if (checkedCount >= 9) {
@@ -230,6 +231,7 @@
 
             async function getGeminiPlan() {
                 generatePlanBtn.disabled = true;
+                generatePlanBtn.textContent = 'Generating...';
                 geminiPlanSection.classList.remove('hidden');
                 loader.classList.remove('hidden');
                 geminiError.classList.add('hidden');
@@ -243,6 +245,7 @@
                     geminiError.classList.remove('hidden');
                     loader.classList.add('hidden');
                     generatePlanBtn.disabled = false;
+                    generatePlanBtn.textContent = '✨ Generate My Custom Action Plan';
                     return;
                 }
                 
@@ -250,7 +253,7 @@
                     As an expert climate business advisor for the MENA region, create a concise, actionable plan for a small business owner who has identified the following specific climate vulnerabilities:
                     - ${selectedRisks.join('\n- ')}
 
-                    For each vulnerability, provide one clear, low-cost, and practical recommendation. Return the response as a JSON object containing a single key "recommendations". This key should hold an array of objects, where each object has three properties: "title" (a short, catchy title for the recommendation), "description" (a 1-2 sentence explanation of the action), and "priority" (either "High", "Medium", or "Low").
+                    For each vulnerability, provide one clear, low-cost, and practical recommendation. Return the response as a valid JSON object containing a single key "recommendations". This key should hold an array of objects, where each object has three string properties: "title" (a short, catchy title for the recommendation), "description" (a 1-2 sentence explanation of the action), and "priority" (a value of "High", "Medium", or "Low").
                 `;
 
                 const payload = {
@@ -267,7 +270,7 @@
                                         properties: {
                                             "title": { "type": "STRING" },
                                             "description": { "type": "STRING" },
-                                            "priority": { "type": "STRING", "enum": ["High", "Medium", "Low"] }
+                                            "priority": { "type": "STRING" }
                                         },
                                         required: ["title", "description", "priority"]
                                     }
@@ -288,27 +291,29 @@
                         body: JSON.stringify(payload)
                     });
 
-                    if (!response.ok) {
-                        throw new Error(`API Error: ${response.statusText}`);
-                    }
-
                     const result = await response.json();
+
+                    if (!response.ok) {
+                        const errorDetails = result.error ? result.error.message : 'An unknown API error occurred.';
+                        throw new Error(errorDetails);
+                    }
                     
                     if (result.candidates && result.candidates.length > 0 && result.candidates[0].content && result.candidates[0].content.parts.length > 0) {
                         const jsonText = result.candidates[0].content.parts[0].text;
                         const parsedJson = JSON.parse(jsonText);
                         displayRecommendations(parsedJson.recommendations);
                     } else {
-                        throw new Error("Invalid response structure from API.");
+                        throw new Error("The API returned an empty or invalid response. Please try again.");
                     }
 
                 } catch (error) {
                     console.error('Error fetching Gemini plan:', error);
-                    geminiError.textContent = 'Sorry, we couldn\'t generate a plan at this time. Please try again later.';
+                    geminiError.textContent = `Sorry, we couldn't generate a plan. ${error.message}`;
                     geminiError.classList.remove('hidden');
                 } finally {
                     loader.classList.add('hidden');
                     generatePlanBtn.disabled = false;
+                    generatePlanBtn.textContent = '✨ Generate My Custom Action Plan';
                 }
             }
 
